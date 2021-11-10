@@ -29,7 +29,7 @@ async function run() {
 run().catch(console.dir)
 
 app.get('/', (req, res) => {
-    res.send('Simple Express Server is Running');
+    res.send('FitPal Bicycle Server is Running');
 })
 
 app.listen(port, () => {
