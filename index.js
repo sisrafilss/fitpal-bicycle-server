@@ -20,7 +20,30 @@ async function run() {
     try {
         await client.connect();
 
-        console.log('database connected');
+        const database = client.db('fitpal_bicycle');
+        const productCollection = database.collection('products');
+        const reviewCollection = database.collection('reviews');
+
+        // GET highlighted products
+        app.get('/highlighted-products', async (req, res) => {
+            const cursor = productCollection.find({});
+            const highlightedProducts = await cursor.limit(6).toArray();
+            res.json(highlightedProducts);
+        });
+
+        // GET All products 
+        app.get('/products', async (req, res) => {
+            const cursor = productCollection.find({});
+            const products = await cursor.toArray();
+            res.json(products);
+        });
+
+        // GET Reviews
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const reviews = await cursor.toArray();
+            res.json(reviews);
+        });
     }
     finally {
         // await client.close();
