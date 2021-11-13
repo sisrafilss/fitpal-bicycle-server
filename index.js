@@ -60,15 +60,12 @@ async function run() {
             const order = req.body;
             order['status'] = 'Pending';
             const result = await orderCollection.insertOne(order);
-            console.log(result);
             res.json(result);
         });
 
         // GET - Orders for specific user
         app.get('/my-orders', async (req, res) => {
             const email = req.query.email;
-            console.log(email);
-
             const query = { email: email }
             const cursor = orderCollection.find(query);
             if (await cursor.count() > 0) {
@@ -79,6 +76,15 @@ async function run() {
                 res.json({ message: 'Product Not Found!' })
             }
         });
+
+        // Delete - an order by user
+        app.delete('/my-orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query);
+            console.log(result);
+            res.json(result);
+        })
 
     }
     finally {
