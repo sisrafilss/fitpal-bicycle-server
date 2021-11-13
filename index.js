@@ -30,7 +30,6 @@ async function run() {
         // POST - Add user data to Database
         app.post('/users', async (req, res) => {
             const newUser = req.body;
-            newUser['role'] = 'user';
             const result = await userCollection.insertOne(newUser);
             console.log(result);
             res.json(result);
@@ -39,7 +38,6 @@ async function run() {
         // PUT - Update user data to database for third party login system
         app.put('/users', async (req, res) => {
             const userData = req.body;
-            userData['role'] = 'user';
             const filter = { email: userData.email }
             const options = { upsert: true }
             const updateDoc = { $set: userData }
@@ -88,11 +86,16 @@ async function run() {
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email }
+            console.log(query);
             const result = await userCollection.findOne(query);
+            console.log(result);
             let isAdmin = false;
             if (result?.role === 'admin') {
                 isAdmin = true;
                 res.json({ admin: isAdmin })
+            }
+            else {
+                res.json({ message: 'You are not an Admin.' })
             }
 
         })
@@ -100,7 +103,9 @@ async function run() {
         // GET - All Orders (for Admin)
         app.get('/all-orders', async (req, res) => {
             const email = req.query.email;
-
+            const cursor = orderCollection.find({});
+            const result = await cursor.toArray();
+            res.json(result);
         });
 
         // POST - place order
