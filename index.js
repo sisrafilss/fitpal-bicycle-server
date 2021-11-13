@@ -67,6 +67,16 @@ async function run() {
             res.json(products);
         });
 
+        // Delete - Delete a product by admin
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await productCollection.deleteOne(query);
+            console.log(result);
+            res.json(result);
+        })
+
+
         // GET Single Product Details 
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
@@ -147,7 +157,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await orderCollection.deleteOne(query);
-            console.log(result);
             res.json(result);
         })
 
