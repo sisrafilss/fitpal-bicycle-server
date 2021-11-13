@@ -108,6 +108,21 @@ async function run() {
             res.json(result);
         });
 
+        // PUT - Update an order status
+        app.put('/all-orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const found = await orderCollection.findOne(query);
+            found.status = 'Shipped';
+
+            const filter = query;
+            const options = { upsert: false }
+            const updateDoc = { $set: found };
+            const result = await orderCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+
+        })
+
         // POST - place order
         app.post('/place-order', async (req, res) => {
             const order = req.body;
