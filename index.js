@@ -53,6 +53,13 @@ async function run() {
             res.json(highlightedProducts);
         });
 
+        // POST - Add a product - Admin
+        app.post('/add-product', async (req, res) => {
+            const product = req.body;
+            const result = await productCollection.insertOne(product);
+            res.json(result);
+        })
+
         // GET All products 
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
