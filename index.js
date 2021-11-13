@@ -25,6 +25,28 @@ async function run() {
         const productCollection = database.collection('products');
         const reviewCollection = database.collection('reviews');
         const orderCollection = database.collection('orders');
+        const userCollection = database.collection('users');
+
+        // POST - Add user data to Database
+        app.post('/users', async (req, res) => {
+            const newUser = req.body;
+            newUser['role'] = 'user';
+            const result = await userCollection.insertOne(newUser);
+            console.log(result);
+            res.json(result);
+        })
+
+        // PUT - Update user data to database for third party login system
+        app.put('/users', async (req, res) => {
+            const userData = req.body;
+            userData['role'] = 'user';
+            const filter = { email: userData.email }
+            const options = { upsert: true }
+            const updateDoc = { $set: userData }
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            console.log(result);
+            res.json(result);
+        })
 
         // GET highlighted products
         app.get('/highlighted-products', async (req, res) => {
@@ -61,6 +83,12 @@ async function run() {
             const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
+
+        // GET - All Orders (for Admin)
+        app.get('/all-orders', async (req, res) => {
+            const email = req.query.email;
+
+        });
 
         // POST - place order
         app.post('/place-order', async (req, res) => {
