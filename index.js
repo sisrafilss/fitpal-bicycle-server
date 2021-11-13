@@ -93,7 +93,6 @@ async function run() {
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email }
-            console.log(query);
             const result = await userCollection.findOne(query);
             console.log(result);
             let isAdmin = false;
@@ -104,6 +103,20 @@ async function run() {
             else {
                 res.json({ message: 'You are not an Admin.' })
             }
+
+        });
+
+        // PUT - Set an user role as admin
+        app.put('/make-admin', async (req, res) => {
+            const filter = req.body;
+            const updateDoc = {
+                $set: {
+                    role: 'admin'
+                }
+            }
+            const result = await userCollection.updateOne(filter, updateDoc);
+
+            res.json(result);
 
         })
 
