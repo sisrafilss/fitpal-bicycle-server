@@ -24,6 +24,7 @@ async function run() {
         const database = client.db('fitpal_bicycle');
         const productCollection = database.collection('products');
         const reviewCollection = database.collection('reviews');
+        const orderCollection = database.collection('orders');
 
         // GET highlighted products
         app.get('/highlighted-products', async (req, res) => {
@@ -53,6 +54,32 @@ async function run() {
             const reviews = await cursor.toArray();
             res.json(reviews);
         });
+
+        // POST - place order
+        app.post('/place-order', async (req, res) => {
+            const order = req.body;
+            order['status'] = 'Pending';
+            const result = await orderCollection.insertOne(order);
+            console.log(result);
+            res.json(result);
+        });
+
+        // GET - Orders for specific user
+        app.get('/my-orders', async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+
+            const query = { email: email }
+            const cursor = orderCollection.find(query);
+            if (await cursor.count() > 0) {
+                const orders = await cursor.toArray();
+                res.json(orders);
+            }
+            else {
+                res.json({ message: 'Product Not Found!' })
+            }
+        });
+
     }
     finally {
         // await client.close();
