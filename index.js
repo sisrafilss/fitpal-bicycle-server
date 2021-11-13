@@ -31,7 +31,6 @@ async function run() {
         app.post('/users', async (req, res) => {
             const newUser = req.body;
             const result = await userCollection.insertOne(newUser);
-            console.log(result);
             res.json(result);
         })
 
@@ -42,7 +41,6 @@ async function run() {
             const options = { upsert: true }
             const updateDoc = { $set: userData }
             const result = await userCollection.updateOne(filter, updateDoc, options);
-            console.log(result);
             res.json(result);
         })
 
@@ -72,7 +70,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await productCollection.deleteOne(query);
-            console.log(result);
             res.json(result);
         })
 
@@ -104,7 +101,6 @@ async function run() {
             const email = req.params.email;
             const query = { email: email }
             const result = await userCollection.findOne(query);
-            console.log(result);
             let isAdmin = false;
             if (result?.role === 'admin') {
                 isAdmin = true;
@@ -187,7 +183,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await orderCollection.deleteOne(query);
-            console.log(result);
             res.json(result);
         })
 
