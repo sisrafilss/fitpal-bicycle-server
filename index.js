@@ -84,6 +84,19 @@ async function run() {
             res.send(result);
         })
 
+        // GET - Admin Status
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await userCollection.findOne(query);
+            let isAdmin = false;
+            if (result?.role === 'admin') {
+                isAdmin = true;
+                res.json({ admin: isAdmin })
+            }
+
+        })
+
         // GET - All Orders (for Admin)
         app.get('/all-orders', async (req, res) => {
             const email = req.query.email;
