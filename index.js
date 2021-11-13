@@ -114,13 +114,21 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const found = await orderCollection.findOne(query);
             found.status = 'Shipped';
-
             const filter = query;
             const options = { upsert: false }
             const updateDoc = { $set: found };
             const result = await orderCollection.updateOne(filter, updateDoc, options);
             res.json(result);
 
+        });
+
+        // Delete - Delete an Order by admin
+        app.delete('/all-orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query);
+            console.log(result);
+            res.json(result);
         })
 
         // POST - place order
